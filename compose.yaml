@@ -14,8 +14,8 @@ services:
       - 192.168.50.1
       - 1.1.1.1
     volumes:
-      - ./prometheus/config:/etc/prometheus
-      - ./prometheus/data:/prometheus
+      - /home/andrew/containers/unpoller-unifi/prometheus/config:/etc/prometheus
+      - /home/andrew/containers/unpoller-unifi/prometheus/data:/prometheus
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.prometheus.entrypoints=http"
@@ -48,9 +48,9 @@ services:
       - 192.168.50.1
       - 1.1.1.1
     volumes:
-      - ./grafana/data:/var/lib/grafana
-      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
-      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - /home/andrew/containers/unpoller-unifi/grafana/data:/var/lib/grafana
+      - /home/andrew/containers/unpoller-unifi/grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - /home/andrew/containers/unpoller-unifi/grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
       - prometheus
     labels:
@@ -102,8 +102,8 @@ services:
     container_name: dozzle
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-    env_file:
-      - ./dozzle/.env
+    environment:
+      - TZ=${TZ}
     ports:
       - '8383:8080'
     networks:
