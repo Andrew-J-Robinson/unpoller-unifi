@@ -8,9 +8,23 @@ services:
       - TZ=${TZ:-America/New_York}
     ports:
       - '9090:9090'
+    networks:
+      - proxy
     volumes:
       - ./prometheus/config:/etc/prometheus
       - ./prometheus/data:/prometheus
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.prometheus.entrypoints=http"
+      - "traefik.http.routers.prometheus.rule=Host(`prometheus.local.zeebali.com`)"
+      - "traefik.http.middlewares.prometheus-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.prometheus.middlewares=prometheus-https-redirect"
+      - "traefik.http.routers.prometheus-secure.entrypoints=https"
+      - "traefik.http.routers.prometheus-secure.rule=Host(`prometheus.local.zeebali.com`)"
+      - "traefik.http.routers.prometheus-secure.tls=true"
+      - "traefik.http.routers.prometheus-secure.service=prometheus"
+      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
+      - "traefik.docker.network=proxy"
   grafana:
     image: grafana/grafana:latest
     restart: unless-stopped
@@ -24,13 +38,26 @@ services:
       - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS}      
     ports:
       - '3000:3000'
+    networks:
+      - proxy
     volumes:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
     depends_on:
       - prometheus
-
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.grafana.entrypoints=http"
+      - "traefik.http.routers.grafana.rule=Host(`grafana.local.zeebali.com`)"
+      - "traefik.http.middlewares.grafana-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.grafana.middlewares=grafana-https-redirect"
+      - "traefik.http.routers.grafana-secure.entrypoints=https"
+      - "traefik.http.routers.grafana-secure.rule=Host(`grafana.local.zeebali.com`)"
+      - "traefik.http.routers.grafana-secure.tls=true"
+      - "traefik.http.routers.grafana-secure.service=grafana"
+      - "traefik.http.services.grafana.loadbalancer.server.port=3000"
+      - "traefik.docker.network=proxy"
   unpoller:
     image: ghcr.io/unpoller/unpoller:latest
     restart: unless-stopped
@@ -54,7 +81,8 @@ services:
       - UP_UNIFI_CONTROLLER_0_SITE=${UP_UNIFI_CONTROLLER_0_SITE}
     ports:
       - '9130:9130'
-
+    networks:
+      - proxy
 # optional log viewer for docker containers
   dozzle:
     image: amir20/dozzle:latest
@@ -66,3 +94,20 @@ services:
       - ./dozzle/.env
     ports:
       - '8383:8080'
+    networks:
+      - proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.entrypoints=http"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.local.zeebali.com`)"
+      - "traefik.http.middlewares.dozzle-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.dozzle.middlewares=dozzle-https-redirect"
+      - "traefik.http.routers.dozzle-secure.entrypoints=https"
+      - "traefik.http.routers.dozzle-secure.rule=Host(`dozzle.local.zeebali.com`)"
+      - "traefik.http.routers.dozzle-secure.tls=true"
+      - "traefik.http.routers.dozzle-secure.service=dozzle"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.docker.network=proxy"
+networks:
+  proxy:
+    external: true
