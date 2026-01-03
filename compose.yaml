@@ -10,6 +10,9 @@ services:
       - '9090:9090'
     networks:
       - proxy
+    dns:
+      - 192.168.69.1
+      - 1.1.1.1
     volumes:
       - ./prometheus/config:/etc/prometheus
       - ./prometheus/data:/prometheus
@@ -25,6 +28,7 @@ services:
       - "traefik.http.routers.prometheus-secure.service=prometheus"
       - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
       - "traefik.docker.network=proxy"
+
   grafana:
     image: grafana/grafana:latest
     restart: unless-stopped
@@ -40,6 +44,9 @@ services:
       - '3000:3000'
     networks:
       - proxy
+    dns:
+      - 192.168.69.1
+      - 1.1.1.1
     volumes:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
@@ -58,6 +65,7 @@ services:
       - "traefik.http.routers.grafana-secure.service=grafana"
       - "traefik.http.services.grafana.loadbalancer.server.port=3000"
       - "traefik.docker.network=proxy"
+
   unpoller:
     image: ghcr.io/unpoller/unpoller:latest
     restart: unless-stopped
@@ -83,6 +91,10 @@ services:
       - '9130:9130'
     networks:
       - proxy
+    dns:
+      - 192.168.69.1
+      - 1.1.1.1
+      
 # optional log viewer for docker containers
   dozzle:
     image: amir20/dozzle:latest
@@ -96,6 +108,9 @@ services:
       - '8383:8080'
     networks:
       - proxy
+    dns:
+      - 192.168.69.1
+      - 1.1.1.1
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.dozzle.entrypoints=http"
