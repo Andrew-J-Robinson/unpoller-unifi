@@ -11,7 +11,7 @@ services:
     networks:
       - proxy
     dns:
-      - 192.168.69.1
+      - 192.168.50.1
       - 1.1.1.1
     volumes:
       - ./prometheus/config:/etc/prometheus
@@ -45,7 +45,7 @@ services:
     networks:
       - proxy
     dns:
-      - 192.168.69.1
+      - 192.168.50.1
       - 1.1.1.1
     volumes:
       - ./grafana/data:/var/lib/grafana
@@ -92,9 +92,9 @@ services:
     networks:
       - proxy
     dns:
-      - 192.168.69.1
+      - 192.168.50.1
       - 1.1.1.1
-      
+
 # optional log viewer for docker containers
   dozzle:
     image: amir20/dozzle:latest
@@ -109,7 +109,7 @@ services:
     networks:
       - proxy
     dns:
-      - 192.168.69.1
+      - 192.168.50.1
       - 1.1.1.1
     labels:
       - "traefik.enable=true"
