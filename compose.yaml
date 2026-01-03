@@ -4,8 +4,8 @@ services:
     restart: unless-stopped
     container_name: prometheus
     user: "${UID:-1000}:${GID:-1000}"
-    env_file:
-      - ./prometheus/.env
+    environment:
+      - TZ=${TZ:-America/New_York}
     ports:
       - '9090:9090'
     volumes:
@@ -16,8 +16,12 @@ services:
     restart: unless-stopped
     container_name: grafana
     user: "${UID:-1000}:${GID:-1000}"
-    env_file:
-      - ./grafana/.env
+    environment:
+      - TZ=${TZ:-America/New_York}
+      - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}
+      - GF_USERS_ALLOW_SIGN_UP=${GF_USERS_ALLOW_SIGN_UP:-false}
+      - GF_INSTALL_PLUGINS=${GF_INSTALL_PLUGINS}      
     ports:
       - '3000:3000'
     volumes:
@@ -31,8 +35,23 @@ services:
     image: ghcr.io/unpoller/unpoller:latest
     restart: unless-stopped
     container_name: unpoller
-    env_file:
-      - ./unpoller/.env
+    environment:
+      - TZ=${TZ}
+      - UP_INFLUXDB_DISABLE=${UP_INFLUXDB_DISABLE}
+      - UP_POLLER_DEBUG=${UP_POLLER_DEBUG}
+      - UP_UNIFI_DYNAMIC=${UP_UNIFI_DYNAMIC}
+      - UP_PROMETHEUS_HTTP_LISTEN=${UP_PROMETHEUS_HTTP_LISTEN}
+      - UP_PROMETHEUS_NAMESPACE=${UP_PROMETHEUS_NAMESPACE}
+      - UP_UNIFI_CONTROLLER_0_VERIFY_SSL=${UP_UNIFI_CONTROLLER_0_VERIFY_SSL}
+      - UP_UNIFI_CONTROLLER_0_SAVE_ANOMALIES=${UP_UNIFI_CONTROLLER_0_SAVE_ANOMALIES}
+      - UP_UNIFI_CONTROLLER_0_SAVE_EVENTS=${UP_UNIFI_CONTROLLER_0_SAVE_EVENTS}
+      - UP_UNIFI_CONTROLLER_0_SAVE_IDS=${UP_UNIFI_CONTROLLER_0_SAVE_IDS}
+      - UP_UNIFI_CONTROLLER_0_SAVE_SITES=${UP_UNIFI_CONTROLLER_0_SAVE_SITES}
+      - UP_UNIFI_CONTROLLER_0_SAVE_DPI=${UP_UNIFI_CONTROLLER_0_SAVE_DPI}
+      - UP_UNIFI_CONTROLLER_0_URL=${UP_UNIFI_CONTROLLER_0_URL}
+      - UP_UNIFI_CONTROLLER_0_USER=${UP_UNIFI_CONTROLLER_0_USER}
+      - UP_UNIFI_CONTROLLER_0_PASS=${UP_UNIFI_CONTROLLER_0_PASS}
+      - UP_UNIFI_CONTROLLER_0_SITE=${UP_UNIFI_CONTROLLER_0_SITE}
     ports:
       - '9130:9130'
 
