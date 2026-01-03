@@ -47,7 +47,7 @@ Docker Compose stack for monitoring UniFi networks with UnPoller, Prometheus, an
 | ------- | --- |
 | Grafana | <http://localhost:3000> |
 | Prometheus | <http://localhost:9090> |
-| Dozzle (logs) | <http://localhost:8080> |
+| Dozzle (logs) | <http://localhost:8383> |
 
 **Grafana default login**: admin/admin123 (change in `grafana/.env`)
 
