@@ -3,7 +3,6 @@ services:
     image: prom/prometheus:latest
     restart: unless-stopped
     container_name: prometheus
-    user: "${UID:-1000}:${GID:-1000}"
     environment:
       - TZ=${TZ:-America/New_York}
     ports:
@@ -33,7 +32,6 @@ services:
     image: grafana/grafana:latest
     restart: unless-stopped
     container_name: grafana
-    user: "${UID:-1000}:${GID:-1000}"
     environment:
       - TZ=${TZ:-America/New_York}
       - GF_SECURITY_ADMIN_USER=${GF_SECURITY_ADMIN_USER}
